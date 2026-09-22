@@ -1,0 +1,41 @@
+name: Go CI
+on:
+  push:
+	branches: [ main ]
+  pull_request:
+	branches: [ main ]
+
+jobs:
+  test:
+	runs-on: ubuntu-latest
+	steps:
+	- name: Checkout code
+	  uses: actions/checkout@v4
+
+	- name: Set up Go
+	  uses: actions/setup-go@v5
+	  with:
+		go-version: '1.27.1'
+
+	- name: Check formatting
+	  working-directory: ./lab1
+	  run: test -z "$(gofmt -l .)"
+
+	- name: Check dependencies
+	  working-directory: ./lab1
+	  run: |
+	    go mod tidy
+		git diff --exit-code
+		go mod verify
+
+	- name: Run go vet
+	  working-directory: ./lab1
+	  run: go vet ./...
+
+	- name: Build
+	  working-directory: ./lab1
+	  run: go build ./...
+
+	- name: Run tests
+	  working-directory: ./lab1
+	  run: go test ./...
