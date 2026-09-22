@@ -17,10 +17,14 @@ func main() {
 	var year int
 
 	fmt.Print("Введите дату в формате \"20 9 2026\":  ")
-	fmt.Scan(&day, &month, &year)
+	_, err := fmt.Scan(&day, &month, &year)
+	if err != nil {
+		fmt.Println("Ошибка ввода:", err)
+		return
+	}
 
 	date := time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.Local)
 
 	result := dayToNewYear(date)
-	fmt.Println("До новго года:", result, "дней")
+	fmt.Println("До Нового года осталось:", result, "дней")
 }
