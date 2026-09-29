@@ -41,3 +41,11 @@ jobs:
       - name: Run tests
         working-directory: ./lab1
         run: go test ./...
+
+      - name: Check test coverage
+        working-directory: ./lab1
+        run: go test -cover ./...
+
+      - name: Run race detector
+        working-directory: ./lab1
+        run: go test -race ./...
