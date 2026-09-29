@@ -40,3 +40,16 @@ func daysHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
 }
+
+func healthHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+
+	response := struct {
+		Status string `json:"status"`
+	}{
+		Status: "ok",
+	}
+
+	json.NewEncoder(w).Encode(response)
+}
