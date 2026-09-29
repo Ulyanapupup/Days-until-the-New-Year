@@ -134,3 +134,43 @@ func TestDaysHandlerWithoutDate(t *testing.T) {
 			response.Days, expectedDays)
 	}
 }
+
+func TestHealthHandler(t *testing.T) {
+	req := httptest.NewRequest(http.MethodGet, "/health", nil)
+	recorder := httptest.NewRecorder()
+
+	healthHandler(recorder, req)
+
+	if recorder.Code != http.StatusOK {
+		t.Errorf("получен статус %d, ожидался %d",
+			recorder.Code, http.StatusOK)
+	}
+
+	if contentType := recorder.Header().Get("Content-Type"); contentType != "application/json" {
+		t.Errorf("получен Content-Type %q, ожидался application/json", contentType)
+	}
+
+	var response struct {
+		Status string `json:"status"`
+	}
+
+	err := json.NewDecoder(recorder.Body).Decode(&response)
+	if err != nil {
+		t.Fatalf("ошибка разбора JSON: %v", err)
+	}
+
+	if response.Status != "ok" {
+		t.Errorf("получен статус %q, ожидался %q",
+			response.Status, "ok")
+	}
+}
+
+func BenchmarkDayToNewYear(b *testing.B) {
+	date := time.Date(2026, 6, 15, 0, 0, 0, 0, time.Local)
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		dayToNewYear(date)
+	}
+}
